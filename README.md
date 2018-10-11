@@ -21,16 +21,16 @@ wget https://rubygems.org/downloads/net-sftp-2.1.2.gem
 mkdir logstash
 mv *.gem logstash/
 zip -r logstash-input-sftp.zip logstash
-bin/logstash-plugin install file:///absolute/path/to/logstash-input-sftp
+bin/logstash-plugin install file:///absolute/path/to/logstash-input-sftp.zip
 ```
-then you can see the plugin are under /logstash_home/vendor/bundle/jruby/2.3.0/gems
+then you can see the plugin are under logstash_home/vendor/bundle/jruby/2.3.0/gems
 
 ### 3.Config file
 ```sh
 input {
   sftp {
     username => "username"
-    password => "password_optional"
+    password => "optional_if_keyfile_path_exist"
     keyfile_path => "optional"
     remote_host => "localhost"
     port => 22
