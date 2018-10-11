@@ -14,16 +14,37 @@ gem build logstash-input-sftp.gemspec
 ```
 
 ### 2.Install Plugin From Logstash home
+put logstash-input-sftp-0.0.1.gem at logstash home
 ```sh
-bin/logstash-plugin install net-ssh
+wget https://rubygems.org/downloads/net-ssh-5.0.2.gem
+wget https://rubygems.org/downloads/net-sftp-2.1.2.gem
+mkdir logstash
+mv *.gem logstash/
+zip -r logstash-input-sftp.zip logstash
+bin/logstash-plugin install file:///absolute/path/to/logstash-input-sftp
 ```
-```sh
-bin/logstash-plugin install net-sftp
-```
-```sh
-bin/logstash-plugin install logstash-input-sftp
-```
+then you can see the plugin are under /logstash_home/vendor/bundle/jruby/2.3.0/gems
 
+### 3.Config file
+```sh
+input {
+  sftp {
+    username => "username"
+    password => "password_optional"
+    keyfile_path => "optional"
+    remote_host => "localhost"
+    port => 22
+    remote_path => "/var/a.log"
+    local_path => "/var/b.log"
+    delimiter => "\n"
+  }
+}
+output {
+  stdout {
+    codec => rubydebug
+  }
+}
+```
 
 ## General Documentation
 
