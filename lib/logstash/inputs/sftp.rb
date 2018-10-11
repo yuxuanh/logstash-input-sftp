@@ -29,7 +29,7 @@ require "net/sftp"
 # ----------------------------------
 
 class LogStash::Inputs::SFTP < LogStash::Inputs::Base
-  config_name "example"
+  config_name "sftp"
 
   # If undefined, Logstash will complain, even if codec is unused.
   default :codec, "plain"
