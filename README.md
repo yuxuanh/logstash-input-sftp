@@ -9,7 +9,9 @@ It is fully free and fully open source. The license is Apache 2.0, meaning you a
 ## Usage
 
 ### 1.Build your plugin gem
+```sh
 gem build logstash-input-sftp.gemspec
+```
 
 ### 2.Install Plugin From Logstash home
 ```sh
