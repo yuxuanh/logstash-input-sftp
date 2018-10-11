@@ -56,7 +56,7 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
   def register
     @logger.info("Registering SFTP Input",
              :username => @username, :password => @password,
-             :host => @host, :port => @port,
+             :remote_host => @remote_host, :port => @port,
              :remote_path => remote_path, :local_path => @local_path,
              :interval => @interval)
   end # def register
@@ -65,15 +65,15 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
     # we can abort the loop if stop? becomes true
     while !stop?
       if @password.nil?
-        Net::SFTP.start(@host, @username, :keys => @keyfile_path) do |sftp|
+        Net::SFTP.start(@remote_host, @username, :keys => @keyfile_path) do |sftp|
           sftp.download!(@remote_path, @local_path)
         end #download
       else 
-        Net::SFTP.start(@host, @username, :password => @password) do |sftp|
+        Net::SFTP.start(@remote_host, @username, :password => @password) do |sftp|
           sftp.download!(@remote_path, @local_path)
         end #download
       end
-      @logger.info("#{host} : #{remote_path} has downloaded to #{local_path}")
+      @logger.info("#{remote_host} : #{remote_path} has downloaded to #{local_path}")
 
       fh = open @local_path
       content = fh.read
