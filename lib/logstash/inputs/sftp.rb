@@ -52,7 +52,6 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
   config :local_path, :validate => :string, :required => true
 
   # Interval to pull remote data (in seconds).
-  #config :interval, :validate => :number, :default => 60
   config :schedule, :validate => :string
 
   public
@@ -107,6 +106,6 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
         event = LogStash::Event.new("message" => value)
         queue << event
       end #split
-      @logger.info("#{local_path} has processed, now waiting #{interval}s, then it will download and process again")
+      @logger.info("#{local_path} has processed, now waiting #{schedule}, then it will download and process again")
   end # def process
 end # class LogStash::Inputs::Example
