@@ -1,6 +1,6 @@
 # Logstash SFTP Plugin
 
-[![Travis Build Status](https://travis-ci.org/yuxuanh/logstash-input-sftp.svg)](https://travis-ci.org/yuxuanh/logstash-input-sftp)
+<!--[![Travis Build Status](https://travis-ci.org/yuxuanh/logstash-input-sftp.svg)](https://travis-ci.org/yuxuanh/logstash-input-sftp)-->
 
 This is a plugin for [Logstash](https://github.com/elastic/logstash).
 
