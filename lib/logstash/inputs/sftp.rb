@@ -5,6 +5,8 @@ require "logstash/inputs/file"
 require "logstash/namespace"
 require "stud/interval"
 require "net/sftp"
+require "rufus/scheduler"
+require "date"
 
 # This is for logstash to sftp download file and parse
 # The config should look like this:
@@ -50,7 +52,8 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
   config :local_path, :validate => :string, :required => true
 
   # Interval to pull remote data (in seconds).
-  config :interval, :validate => :number, :default => 60
+  #config :interval, :validate => :number, :default => 60
+  config :schedule, :validate => :string
 
   public
   def register
@@ -58,13 +61,34 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
              :username => @username, :password => @password,
              :remote_host => @remote_host, :port => @port,
              :remote_path => remote_path, :local_path => @local_path,
-             :interval => @interval)
+             :schedule => @schedule)
   end # def register
 
   def run(queue)
-    # we can abort the loop if stop? becomes true
-    while !stop?
-      if @password.nil?
+    if @schedule
+      @scheduler = Rufus::Scheduler.new(:max_work_threads => 1)
+      @scheduler.cron @schedule do
+        process(queue)
+      end
+
+      @scheduler.join
+    else
+      process(queue)
+    end
+  end # def run
+
+  def stop
+    @scheduler.shutdown(:wait) if @scheduler
+  end # def stop
+
+  def process(queue)
+    if @remote_path.include?('{today}')
+      d = DateTime.now
+      @remote_path.gsub!('{today}', d.strftime("%Y%m%d"))
+    end
+
+    @logger.info("Prepare to download #{remote_host}:#{remote_path} to #{local_path}")
+    if @password.nil?
         Net::SFTP.start(@remote_host, @username, :keys => @keyfile_path) do |sftp|
           sftp.download!(@remote_path, @local_path)
         end #download
@@ -84,19 +108,5 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
         queue << event
       end #split
       @logger.info("#{local_path} has processed, now waiting #{interval}s, then it will download and process again")
-      # because the sleep interval can be big, when shutdown happens
-      # we want to be able to abort the sleep
-      # Stud.stoppable_sleep will frequently evaluate the given block
-      # and abort the sleep(@interval) if the return value is true
-      Stud.stoppable_sleep(@interval) { stop? }
-    end # loop
-  end # def run
-
-  def stop
-    # nothing to do in this case so it is not necessary to define stop
-    # examples of common "stop" tasks:
-    #  * close sockets (unblocking blocking reads/accepts)
-    #  * cleanup temporary files
-    #  * terminate spawned threads
-  end
+  end # def process
 end # class LogStash::Inputs::Example
