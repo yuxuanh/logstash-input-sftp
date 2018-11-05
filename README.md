@@ -8,7 +8,7 @@ It is fully free and fully open source. The license is Apache 2.0, meaning you a
 
 ## Breaking Changes
 v0.0.1 sftp download and read, has interval  
-v0.0.2 add schedule  
+v0.0.2 remove interval and add schedule  
 
 ## Usage
 
