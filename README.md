@@ -6,6 +6,10 @@ This is a plugin for [Logstash](https://github.com/elastic/logstash).
 
 It is fully free and fully open source. The license is Apache 2.0, meaning you are pretty much free to use it however you want in whatever way.
 
+## Breaking Changes
+v0.0.1 sftp download and read, has interval  
+v0.0.2 remove interval and add schedule  
+
 ## Usage
 
 ### 1.Build your plugin gem
