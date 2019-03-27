@@ -41,6 +41,7 @@ input {
     remote_path => "/var/a.log"
     local_path => "/var/b.log"
     delimiter => "\n"
+    schedule => "49 06 * * *"
   }
 }
 output {
@@ -49,7 +50,8 @@ output {
   }
 }
 ```
-
+ - if remote path have datetime variable then can use {today} in remote path variable, code in lib/logstash/input/sftp.rb line 89
+ - if you file content need convert encoding, then replace lib/logstash/input/sftp.rb line 109 "values=content.force_encoding("iso-8859-1").split(@delimiter)"
 ## General Documentation
 
 [logstash-input-example](https://github.com/logstash-plugins/logstash-input-example)
