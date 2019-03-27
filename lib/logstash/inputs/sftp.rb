@@ -37,6 +37,7 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
   default :codec, "plain"
 
  # Login credentials on SFTP server.
+  config :replaceStr, :default => "{today}"
   config :username, :validate => :string, :default => "username"
   config :password
   config :keyfile_path
@@ -81,9 +82,13 @@ class LogStash::Inputs::SFTP < LogStash::Inputs::Base
   end # def stop
 
   def process(queue)
-    if @remote_path.include?('{today}')
+    @logger.info(@replaceStr)
+    if @remote_path.include?(@replaceStr)
       d = DateTime.now
-      @remote_path.gsub!('{today}', d.strftime("%Y%m%d"))
+      temp=d.strftime("%Y%m%d")
+      @remote_path.gsub!(@replaceStr, temp)
+      @replaceStr=temp
+      @logger.info(@replaceStr)
     end
 
     @logger.info("Prepare to download #{remote_host}:#{remote_path} to #{local_path}")
