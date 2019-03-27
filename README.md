@@ -6,6 +6,9 @@ This is a plugin for [Logstash](https://github.com/elastic/logstash).
 
 It is fully free and fully open source. The license is Apache 2.0, meaning you are pretty much free to use it however you want in whatever way.
 
+## logstash version
+I only test in 6.2 and 6.3, no idea about other version, should be work in 6.x at lease. Can raise issue if not work in other version
+
 ## Breaking Changes
 v0.0.1 sftp download and read, has interval  
 v0.0.2 remove interval and add schedule  
